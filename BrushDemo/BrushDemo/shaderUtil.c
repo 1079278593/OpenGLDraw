@@ -151,9 +151,9 @@ GLint glueGetUniformLocation(GLuint program, const GLchar *uniformName)
 /* Convenience wrapper that compiles, links, enumerates uniforms and attribs */
 GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
                        GLsizei attribNameCt, const GLchar **attribNames, 
-                       const GLint *attribLocations,
+                       const GLint *attribLocations,//属性的location
                        GLsizei uniformNameCt, const GLchar **uniformNames, 
-                       GLint *uniformLocations,
+                       GLint *uniformLocations,//统一变量的location
                        GLuint *program)
 {
 	GLuint vertShader = 0, fragShader = 0, prog = 0, status = 1, i;

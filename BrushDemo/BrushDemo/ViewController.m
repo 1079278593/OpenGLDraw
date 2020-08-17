@@ -33,7 +33,14 @@
 
 - (IBAction)maoshuaClick:(id)sender {
     DrawView *paitingView = (DrawView *)self.view;
-    [paitingView changeBrushTexture:@"brush_fang_64"];
+    [paitingView changeBrushTexture:@"pen"];//brush_fang_64      ;pen     ;pencil
+    
+    //看样子还行
+    UIBezierPath *path = [UIBezierPath new];
+    [path moveToPoint:CGPointMake(100, 100)];
+    [path addLineToPoint:CGPointMake(143, 123)];
+    [path addLineToPoint:CGPointMake(100, 200)];
+    [paitingView renderLinePath:path];
     
 }
 - (IBAction)mohuClick:(id)sender {

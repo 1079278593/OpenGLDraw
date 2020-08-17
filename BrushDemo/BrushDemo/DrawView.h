@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface DrawView : UIView
+
 - (void)changeDrawWidth:(CGFloat)width;
-
 - (void)setBrushColor:(UIColor *)newColor;
-
 - (void)changeBrushTexture:(NSString *)imgName;
-
 - (void)erase;
+
+- (BOOL)renderLinePath:(UIBezierPath *)berzierPath;
 
 @end

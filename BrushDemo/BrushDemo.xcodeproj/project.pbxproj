@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A923233B24EA34F500B2CDE1 /* line.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A923233924EA34F500B2CDE1 /* line.vsh */; };
+		A923233C24EA34F500B2CDE1 /* line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A923233A24EA34F500B2CDE1 /* line.fsh */; };
 		F253B1DC20AE6F0300AA0DC4 /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = F253B1DB20AE6F0200AA0DC4 /* circle.png */; };
 		F286B8E820A04AFA0092C0F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8E720A04AFA0092C0F0 /* AppDelegate.m */; };
 		F286B8EB20A04AFA0092C0F0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8EA20A04AFA0092C0F0 /* ViewController.m */; };
@@ -50,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A923233924EA34F500B2CDE1 /* line.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.vsh; sourceTree = "<group>"; };
+		A923233A24EA34F500B2CDE1 /* line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = line.fsh; sourceTree = "<group>"; };
 		F253B1DB20AE6F0200AA0DC4 /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		F286B8E320A04AFA0092C0F0 /* BrushDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrushDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F286B8E620A04AFA0092C0F0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -192,6 +196,8 @@
 			children = (
 				F286B92520A04F220092C0F0 /* point.vsh */,
 				F286B92620A04F220092C0F0 /* point.fsh */,
+				A923233924EA34F500B2CDE1 /* line.vsh */,
+				A923233A24EA34F500B2CDE1 /* line.fsh */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -316,7 +322,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A923233C24EA34F500B2CDE1 /* line.fsh in Resources */,
 				F253B1DC20AE6F0300AA0DC4 /* circle.png in Resources */,
+				A923233B24EA34F500B2CDE1 /* line.vsh in Resources */,
 				F286B8F320A04AFC0092C0F0 /* LaunchScreen.storyboard in Resources */,
 				F286B92C20A060490092C0F0 /* 1.png in Resources */,
 				F286B8F020A04AFC0092C0F0 /* Assets.xcassets in Resources */,

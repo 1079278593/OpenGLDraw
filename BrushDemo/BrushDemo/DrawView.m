@@ -34,7 +34,7 @@ enum {
     UNIFORM_VERTEX_COLOR,
     UNIFORM_TEXTURE,
     NUM_UNIFORMS
-};
+};//用这种方式，相对于location，第一个UNIFORM_MVP默认为0，递增。
 
 typedef struct {
     char *vert, *frag;
@@ -50,8 +50,11 @@ typedef struct {
 } textureInfo_t;
 
 
+//programInfo_t program[NUM_PROGRAMS] = {
+//    { "point.vsh",   "point.fsh" },     // PROGRAM_POINT
+//};
 programInfo_t program[NUM_PROGRAMS] = {
-    { "point.vsh",   "point.fsh" },     // PROGRAM_POINT
+    { "line.vsh",   "line.fsh" },     // PROGRAM_POINT
 };
 
 
@@ -110,7 +113,6 @@ textureInfo_t textures[4] = {
         [self initGL];
         [self setupShaders];
         [self erase];
-        [self textureFromName:@"circle" color:[UIColor redColor]];
         [self setBrushColor:[UIColor redColor]];
         [self changeDrawWidth:30];
     }
@@ -136,7 +138,9 @@ textureInfo_t textures[4] = {
     }
     
     // Set the view's scale factor as you wish
-    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+    double scale = [[UIScreen mainScreen] scale];
+    scale = 1;
+    self.contentScaleFactor = scale;//这个scale会影响backingWidth和backingHeight
     return YES;
 }
 
@@ -213,15 +217,12 @@ textureInfo_t textures[4] = {
 }
 
 #pragma mark- 开启着色器
-- (void)setupShaders
-{
-
-    
+- (void)setupShaders {
     for (int i = 0; i < NUM_PROGRAMS; i++)
     {
         char *vsrc = readFile(pathForResource(program[i].vert));
         char *fsrc = readFile(pathForResource(program[i].frag));
-        GLsizei attribCt = 0;
+        GLsizei attribCount = 0;//
         GLchar *attribUsed[NUM_ATTRIBS];
         GLint attrib[NUM_ATTRIBS];
         GLchar *attribName[NUM_ATTRIBS] = {
@@ -236,13 +237,14 @@ textureInfo_t textures[4] = {
         {
             if (strstr(vsrc, attribName[j]))
             {
-                attrib[attribCt] = j;
-                attribUsed[attribCt++] = attribName[j];
+                attrib[attribCount] = j;//设置属性的location，根据j来。
+                attribUsed[attribCount++] = attribName[j];//attribCt传递自身值，结束后自增。
             }
         }
         
+        //创建program、编译、连接、绑定location
         glueCreateProgram(vsrc, fsrc,
-                          attribCt, (const GLchar **)&attribUsed[0], attrib,
+                          attribCount, (const GLchar **)&attribUsed[0], attrib,
                           NUM_UNIFORMS, &uniformName[0], program[i].uniform,
                           &program[i].id);
         free(vsrc);
@@ -256,7 +258,11 @@ textureInfo_t textures[4] = {
             // the brush texture will be bound to texture unit 0
             glUniform1i(program[PROGRAM_POINT].uniform[UNIFORM_TEXTURE], 0);
             
-            // viewing matrices
+            /*
+             *观测矩阵
+             Ortho：正交；一个正交投影对于视点距离没有影响
+             GLKMatrixMakeOrtho函数返回的矩阵通常与当前projectionMatrix级联来定义视域。
+             */
             GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0, backingWidth, 0, backingHeight, -1, 1);
             GLKMatrix4 modelViewMatrix = GLKMatrix4Identity; // this sample uses a constant identity modelView matrix
             GLKMatrix4 MVPMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
@@ -292,7 +298,7 @@ textureInfo_t textures[4] = {
     textureInfo_t   texture;
     
     // First create a UIImage object from the data in a image file, and then extract the Core Graphics image
-    brushImage = [[UIImage imageNamed:name] imageWithColor:color].CGImage;
+    brushImage = [[UIImage imageNamed:name] imageWithColor:color].CGImage;//这个就是我要找的刷子啊！！！！！！但是又有点不同，这个刷子
     
     // Get the width and height of the image
     width = CGImageGetWidth(brushImage);
@@ -321,8 +327,10 @@ textureInfo_t textures[4] = {
     free(brushData);
     
     texture.id = texId;
-    texture.width = (int)width;
-    texture.height = (int)height;
+//    texture.width = (int)width;
+//    texture.height = (int)height;
+    texture.width = (int)1;
+    texture.height = (int)1;
     brushTexture = texture;
 }
 
@@ -344,7 +352,7 @@ textureInfo_t textures[4] = {
     }
     CGFloat prePathLength = 0;
     CGFloat pathLength = berzierPath.length;
-    CGFloat step = 18;
+    CGFloat step = 1;
     CGRect bounds = self.bounds;
 
     if (pathLength > step) {
@@ -353,7 +361,7 @@ textureInfo_t textures[4] = {
             CGPoint point = [berzierPath pointAtPercentOfLength:prePathLength/pathLength];
             point.y = bounds.size.height - point.y;
             point.x *= scale;
-            point.y *= scale;
+            point.y *= scale;//这个可以放到着色器去做。
             
             if(vertexCount == vertexMax) {
                 vertexMax = 3 * vertexMax;
@@ -394,7 +402,6 @@ textureInfo_t textures[4] = {
 #pragma mark - touchesEvent
 // Handles the continuation of a touch.
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    CGRect bounds = [self bounds];
     UITouch *touch = [[event touchesForView:self] anyObject];
     previousLocation = [touch locationInView:self];
     
@@ -407,17 +414,15 @@ textureInfo_t textures[4] = {
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    CGRect bounds = [self bounds];
     UITouch *touch = [[event touchesForView:self] anyObject];
     
     location = [touch locationInView:self];
-    
-    
     
     if (self.renderPath == nil) {
         self.renderPath = [UIBezierPath bezierPath];
         [self.renderPath moveToPoint:self.currentPath.currentPoint];
     }
+    
     if (CGPointEqualToPoint(self.ctlPoint, CGPointZero)) {
         self.ctlPoint = location;
         CGPoint midPoint = CGPointMake((self.currentPath.currentPoint.x + location.x) * 0.5, (self.currentPath.currentPoint.y + location.y) * 0.5);
@@ -430,7 +435,10 @@ textureInfo_t textures[4] = {
         [self.renderPath addQuadCurveToPoint:midPoint controlPoint:self.ctlPoint];
         firstTouch = NO;
     }
+    //上面的添加方式有问题，会导致线段间的点多次绘制，出现颜色更重的情况。
+    
     BOOL renderPath = [self renderLinePath:self.renderPath];
+//    [self renderLineFromPoint:self.currentPath.currentPoint toPoint:location];
     if (renderPath) {
         self.renderPath = nil;
     }
@@ -524,7 +532,7 @@ textureInfo_t textures[4] = {
         vertexBuffer = malloc(vertexMax * 3 * sizeof(GLfloat));
     
     // Add points to the buffer so there are drawing points every X pixels
-    count = MAX(ceilf(sqrtf((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y)) / (brushWidth/2)), 1);
+    count = MAX(ceilf(hypot(end.x - start.x, end.y - start.y)) / (brushWidth/2), 1);
     for(i = 0; i < count; ++i) {
         if(vertexCount == vertexMax) {
             vertexMax = 3 * vertexMax;
@@ -545,7 +553,7 @@ textureInfo_t textures[4] = {
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER, vertexCount*3*sizeof(GLfloat), vertexBuffer, GL_DYNAMIC_DRAW);
     
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glEnableVertexAttribArray(ATTRIB_VERTEX);//这里指向空，为什么还是要这么写？感觉是从vboId的buffer起始开始，不断读取。
     glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (CGFloat *)NULL);
     
 //    glEnableVertexAttribArray(ATTRIB_ROTATE);
@@ -558,11 +566,4 @@ textureInfo_t textures[4] = {
     [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
--(float)distanceFromPointX:(CGPoint)start distanceToPointY:(CGPoint)end{
-    float distance;
-    CGFloat xDist = (end.x - start.x);
-    CGFloat yDist = (end.y - start.y);
-    distance = sqrt((xDist * xDist) + (yDist * yDist));
-    return distance;
-}
 @end
