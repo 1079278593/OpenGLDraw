@@ -57,7 +57,7 @@ static float generateRandom(float from, float to) { return random() % 10000 / 10
 static float clamp(float min, float max, float value) { return fmaxf(min, fminf(max, value)); }
 
 
-// Find perpendicular vector from two other vectors to compute triangle strip around line
+// Find perpendicular vector from two other vectors to compute triangle strip around line(从其他两个向量中求垂线向量，计算绕线的三角形带)
 static GLKVector3 perpendicular(PPSSignaturePoint p1, PPSSignaturePoint p2) {
     GLKVector3 ret;
     ret.x = p2.vertex.y - p1.vertex.y;
@@ -280,15 +280,15 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     
     CGPoint v = [p velocityInView:self];
-    CGPoint l = [p locationInView:self];
+    CGPoint location = [p locationInView:self];
     
-    currentVelocity = ViewPointToGL(v, self.bounds, (GLKVector3){0,0,0});
+    currentVelocity = ViewPointToGL(v, self.bounds, (GLKVector3){0,0,0});//速度
     float distance = 0.;
     if (previousPoint.x > 0) {
-        distance = sqrtf((l.x - previousPoint.x) * (l.x - previousPoint.x) + (l.y - previousPoint.y) * (l.y - previousPoint.y));
+        distance = hypot((location.x - previousPoint.x), (location.y - previousPoint.y));
     }    
 
-    float velocityMagnitude = sqrtf(v.x*v.x + v.y*v.y);
+    float velocityMagnitude = sqrtf(v.x*v.x + v.y*v.y);     //速度绝对值
     float clampedVelocityMagnitude = clamp(VELOCITY_CLAMP_MIN, VELOCITY_CLAMP_MAX, velocityMagnitude);
     float normalizedVelocity = (clampedVelocityMagnitude - VELOCITY_CLAMP_MIN) / (VELOCITY_CLAMP_MAX - VELOCITY_CLAMP_MIN);
     
@@ -298,10 +298,10 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     
     if ([p state] == UIGestureRecognizerStateBegan) {
         
-        previousPoint = l;
-        previousMidPoint = l;
+        previousPoint = location;
+        previousMidPoint = location;
         
-        PPSSignaturePoint startPoint = ViewPointToGL(l, self.bounds, (GLKVector3){1, 1, 1});
+        PPSSignaturePoint startPoint = ViewPointToGL(location, self.bounds, (GLKVector3){1, 1, 1});
         previousVertex = startPoint;
         previousThickness = penThickness;
         
@@ -312,7 +312,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
         
     } else if ([p state] == UIGestureRecognizerStateChanged) {
         
-        CGPoint mid = CGPointMake((l.x + previousPoint.x) / 2.0, (l.y + previousPoint.y) / 2.0);
+        CGPoint mid = CGPointMake((location.x + previousPoint.x) / 2.0, (location.y + previousPoint.y) / 2.0);
         
         if (distance > QUADRATIC_DISTANCE_TOLERANCE) {
             // Plot quadratic bezier instead of line
@@ -337,19 +337,19 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
             }
         } else if (distance > 1.0) {
             
-            PPSSignaturePoint v = ViewPointToGL(l, self.bounds, StrokeColor);
+            PPSSignaturePoint v = ViewPointToGL(location, self.bounds, StrokeColor);
             [self addTriangleStripPointsForPrevious:previousVertex next:v];
             
             previousVertex = v;            
             previousThickness = penThickness;
         }
         
-        previousPoint = l;
+        previousPoint = location;
         previousMidPoint = mid;
 
     } else if (p.state == UIGestureRecognizerStateEnded | p.state == UIGestureRecognizerStateCancelled) {
         
-        PPSSignaturePoint v = ViewPointToGL(l, self.bounds, (GLKVector3){1, 1, 1});
+        PPSSignaturePoint v = ViewPointToGL(location, self.bounds, (GLKVector3){1, 1, 1});
         addVertex(&length, v);
         
         previousVertex = v;
