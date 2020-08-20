@@ -50,13 +50,9 @@ typedef struct {
 } textureInfo_t;
 
 
-//programInfo_t program[NUM_PROGRAMS] = {
-//    { "point.vsh",   "point.fsh" },     // PROGRAM_POINT
-//};
 programInfo_t program[NUM_PROGRAMS] = {
-    { "line.vsh",   "line.fsh" },     // PROGRAM_POINT
+    { "point.vsh",   "point.fsh" },     // PROGRAM_POINT
 };
-
 
 textureInfo_t textures[4] = {
 };

@@ -24,3 +24,6 @@ when running debug builds on certain devices.
  
 ================================================================================
 Copyright (C) 2011-2013 Apple Inc. All rights reserved.
+
+//下载地址
+https://developer.apple.com/library/archive/samplecode/GLCameraRipple/Introduction/Intro.html#//apple_ref/doc/uid/DTS40011222
