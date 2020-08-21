@@ -16,7 +16,7 @@
 static GLKVector3 StrokeColor = { 0, 0, 0 };
 static float clearColor[4] = { 1, 1, 1, 0 };
 
-// Vertex structure containing 3D point and color
+// Vertex structure containing 3D point and color(顶点结构包含三维点和颜色)
 struct PPSSignaturePoint
 {
 	GLKVector3		vertex;
@@ -25,13 +25,14 @@ struct PPSSignaturePoint
 typedef struct PPSSignaturePoint PPSSignaturePoint;
 
 
-// Maximum verteces in signature
+// Maximum verteces in signature(为什么要限制点的个数？是内存吗？还是绘制是每次重新绘制。改变颜色会导致全部之前的线条也生效，说明极有可能全部绘制过。)
 static const int maxLength = MAXIMUM_VERTECES;
 
 
 // Append vertex to array buffer
 static inline void addVertex(uint *length, PPSSignaturePoint v) {
     if ((*length) >= maxLength) {
+        printf("点的个数超过限制");
         return;
     }
     
@@ -78,7 +79,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     };
 }
 
-
+#pragma mark - < class >
 @interface PenEffectView () {
     // OpenGL state
     EAGLContext *context;
@@ -86,16 +87,11 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     
     GLuint vertexArray;
     GLuint vertexBuffer;
-    GLuint dotsArray;
-    GLuint dotsBuffer;
     
     
     // Array of verteces, with current length
     PPSSignaturePoint SignatureVertexData[maxLength];
     uint length;
-    
-    PPSSignaturePoint SignatureDotsData[maxLength];
-    uint dotsLength;
     
     
     // Width of line at current and previous vertex
@@ -115,14 +111,11 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 
 @implementation PenEffectView
 
-
 - (void)commonInit {
     context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
     if (context) {
         time(NULL);
-        
-        
         
         self.backgroundColor = [UIColor whiteColor];
         self.opaque = NO;
@@ -142,11 +135,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
         pan.cancelsTouchesInView = YES;
         [self addGestureRecognizer:pan];
         
-        // For dotting your i's
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
-        tap.cancelsTouchesInView = YES;
-        [self addGestureRecognizer:tap];
-        
         // Erase with long press
         UILongPressGestureRecognizer *longer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longer.cancelsTouchesInView = YES;
@@ -155,19 +143,18 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     } else [NSException raise:@"NSOpenGLES2ContextException" format:@"Failed to create OpenGL ES2 context"];
 }
 
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     if (self = [super initWithCoder:aDecoder]) [self commonInit];
     return self;
 }
 
-
 - (id)initWithFrame:(CGRect)frame context:(EAGLContext *)ctx
 {
     if (self = [super initWithFrame:frame context:ctx]) [self commonInit];
     return self;
 }
+
 - (id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) [self commonInit];
@@ -184,7 +171,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	context = nil;
 }
 
-
+//这种方式就是每次都重新完全绘制。
 - (void)drawRect:(CGRect)rect
 {
     glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
@@ -197,23 +184,14 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
         glBindVertexArrayOES(vertexArray);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, length);
     }
-
-    if (dotsLength > 0) {
-        glBindVertexArrayOES(dotsArray);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, dotsLength);
-    }
 }
-
 
 - (void)erase {
     length = 0;
-    dotsLength = 0;
     self.hasSignature = NO;
 	
 	[self setNeedsDisplay];
 }
-
-
 
 - (UIImage *)signatureImage
 {
@@ -223,64 +201,21 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     return screenshot;
 }
 
-
 #pragma mark - Gesture Recognizers
-- (void)tap:(UITapGestureRecognizer *)t {
-    CGPoint l = [t locationInView:self];
-    
-    if (t.state == UIGestureRecognizerStateRecognized) {
-        glBindBuffer(GL_ARRAY_BUFFER, dotsBuffer);
-        
-        PPSSignaturePoint touchPoint = ViewPointToGL(l, self.bounds, (GLKVector3){1, 1, 1});
-        addVertex(&dotsLength, touchPoint);
-        
-        PPSSignaturePoint centerPoint = touchPoint;
-        centerPoint.color = StrokeColor;
-        addVertex(&dotsLength, centerPoint);
-
-        GLKVector2 radius = (GLKVector2){
-            clamp(0.00001, 0.02, penThickness * generateRandom(0.5, 1.5)),
-            clamp(0.00001, 0.02, penThickness * generateRandom(0.5, 1.5))
-        };
-        radius.x = 0.5;
-        radius.y = 0.5;
-        GLKVector2 velocityRadius = radius;
-        float angle = 0;
-        
-        
-        static int segments = 3;
-        for (int i = 0; i <= segments; i++) {
-            
-            PPSSignaturePoint p = centerPoint;
-            p.vertex.x += velocityRadius.x * cosf(angle);
-            p.vertex.y += velocityRadius.y * sinf(angle);
-            
-            addVertex(&dotsLength, p);
-//            addVertex(&dotsLength, centerPoint);
-            
-            angle += M_PI * 2.0 / segments;
-        }
-               
-        addVertex(&dotsLength, touchPoint);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-    
-    [self setNeedsDisplay];
-}
-
-
 - (void)longPress:(UILongPressGestureRecognizer *)lp {
     [self erase];
 }
+
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     
 }
-- (void)pan:(UIPanGestureRecognizer *)p {
+
+- (void)pan:(UIPanGestureRecognizer *)gesture {
     
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     
-    CGPoint v = [p velocityInView:self];
-    CGPoint location = [p locationInView:self];
+    CGPoint v = [gesture velocityInView:self];
+    CGPoint location = [gesture locationInView:self];
     
     currentVelocity = ViewPointToGL(v, self.bounds, (GLKVector3){0,0,0});//速度
     float distance = 0.;
@@ -296,7 +231,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     float newThickness = (STROKE_WIDTH_MAX - STROKE_WIDTH_MIN) * (1 - normalizedVelocity) + STROKE_WIDTH_MIN;
     penThickness = penThickness * lowPassFilterAlpha + newThickness * (1 - lowPassFilterAlpha);
     
-    if ([p state] == UIGestureRecognizerStateBegan) {
+    if ([gesture state] == UIGestureRecognizerStateBegan) {
         
         previousPoint = location;
         previousMidPoint = location;
@@ -310,7 +245,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 		
 		self.hasSignature = YES;
         
-    } else if ([p state] == UIGestureRecognizerStateChanged) {
+    } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         
         CGPoint mid = CGPointMake((location.x + previousPoint.x) / 2.0, (location.y + previousPoint.y) / 2.0);
         
@@ -347,7 +282,7 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
         previousPoint = location;
         previousMidPoint = mid;
 
-    } else if (p.state == UIGestureRecognizerStateEnded | p.state == UIGestureRecognizerStateCancelled) {
+    } else if (gesture.state == UIGestureRecognizerStateEnded | gesture.state == UIGestureRecognizerStateCancelled) {
         
         PPSSignaturePoint v = ViewPointToGL(location, self.bounds, (GLKVector3){1, 1, 1});
         addVertex(&length, v);
@@ -359,12 +294,10 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
 	[self setNeedsDisplay];
 }
 
-
 - (void)setStrokeColor:(UIColor *)strokeColor {
     _strokeColor = strokeColor;
     [self updateStrokeColor];
 }
-
 
 #pragma mark - Private
 
@@ -376,7 +309,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
         effect.constantColor = GLKVector4Make(white, white, white, alpha);
     } else effect.constantColor = GLKVector4Make(0,0,0,1);
 }
-
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     [super setBackgroundColor:backgroundColor];
@@ -421,14 +353,13 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     [self bindShaderAttributes];
     
     
-    // Signature Dots
-    glGenVertexArraysOES(1, &dotsArray);
-    glBindVertexArrayOES(dotsArray);
-    
-    glGenBuffers(1, &dotsBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, dotsBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(SignatureDotsData), SignatureDotsData, GL_DYNAMIC_DRAW);
-    [self bindShaderAttributes];
+    // 这个作为参考，不删除
+//    glGenVertexArraysOES(1, &dotsArray);
+//    glBindVertexArrayOES(dotsArray);
+//    glGenBuffers(1, &dotsBuffer);
+//    glBindBuffer(GL_ARRAY_BUFFER, dotsBuffer);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(SignatureDotsData), SignatureDotsData, GL_DYNAMIC_DRAW);
+//    [self bindShaderAttributes];
     
     
     glBindVertexArrayOES(0);
@@ -445,8 +376,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     penThickness = 0.003;
     previousPoint = CGPointMake(-100, -100);
 }
-
-
 
 - (void)addTriangleStripPointsForPrevious:(PPSSignaturePoint)previous next:(PPSSignaturePoint)next {
     float toTravel = penThickness / 2.0;
@@ -481,9 +410,6 @@ static PPSSignaturePoint ViewPointToGL(CGPoint viewPoint, CGRect bounds, GLKVect
     
     glDeleteVertexArraysOES(1, &vertexArray);
     glDeleteBuffers(1, &vertexBuffer);
-    
-    glDeleteVertexArraysOES(1, &dotsArray);
-    glDeleteBuffers(1, &dotsBuffer);
     
     effect = nil;
 }

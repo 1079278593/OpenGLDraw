@@ -117,6 +117,17 @@ textureInfo_t textures[4] = {
     [super layoutSubviews];
     self.backgroundColor = [UIColor whiteColor];
     [self setUpViewport];
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointZero];
+    [path addLineToPoint:CGPointMake(30, 100)];
+    [path addLineToPoint:CGPointMake(40, 130)];
+    [path addLineToPoint:CGPointMake(50, 150)];
+    [path addLineToPoint:CGPointMake(20, 100)];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
+        [self renderLinePath:path];
+    });
 }
 
 #pragma mark - 初始化Context
@@ -151,10 +162,23 @@ textureInfo_t textures[4] = {
     glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
     // This call associates the storage for the current render buffer with the EAGLDrawable (our CAEAGLLayer)
     // allowing us to draw into a buffer that will later be rendered to screen wherever the layer is (which corresponds with our view).
+    //这个调用将当前渲染缓冲区的存储与EAGLDrawable(我们的CAEAGLLayer)关联起来。
+    //允许我们绘制到缓冲区，稍后将渲染到屏幕上的任何层(这与我们的视图相对应)。
     [context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(id<EAGLDrawable>)self.layer];
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderbuffer);//将渲染缓冲区挂载到当前帧缓冲区上
     
+    /*
+     *参考：https://www.jianshu.com/p/d7066d6a02cc
+     
+     一个完整的帧缓冲需要满足以下的条件：
+
+     附加至少一个缓冲（颜色、深度或模板缓冲）。
+     至少有一个颜色附件(Attachment)。
+     所有的附件都必须是完整的（保留了内存）。
+     每个缓冲都应该有相同的样本数。
+     */
     
+    //检查帧缓冲是否完整。
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
         NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -431,7 +455,7 @@ textureInfo_t textures[4] = {
         [self.renderPath addQuadCurveToPoint:midPoint controlPoint:self.ctlPoint];
         firstTouch = NO;
     }
-    //上面的添加方式有问题，会导致线段间的点多次绘制，出现颜色更重的情况。
+    //上面的添加方式有问题，会导致线段间的点多次绘制，出现颜色叠加的情况。(或者在renderLinePath的两点分割出现问题)
     
     BOOL renderPath = [self renderLinePath:self.renderPath];
 //    [self renderLineFromPoint:self.currentPath.currentPoint toPoint:location];
