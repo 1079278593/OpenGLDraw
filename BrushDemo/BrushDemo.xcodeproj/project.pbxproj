@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A983CE4A24EFA1B600213D35 /* DrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = A983CE4824EFA1B500213D35 /* DrawView.m */; };
+		A983CE4B24EFA1B600213D35 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A983CE4924EFA1B600213D35 /* ViewController.m */; };
 		F253B1DC20AE6F0300AA0DC4 /* circle.png in Resources */ = {isa = PBXBuildFile; fileRef = F253B1DB20AE6F0200AA0DC4 /* circle.png */; };
 		F286B8E820A04AFA0092C0F0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8E720A04AFA0092C0F0 /* AppDelegate.m */; };
-		F286B8EB20A04AFA0092C0F0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8EA20A04AFA0092C0F0 /* ViewController.m */; };
 		F286B8EE20A04AFA0092C0F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F286B8EC20A04AFA0092C0F0 /* Main.storyboard */; };
 		F286B8F020A04AFC0092C0F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F286B8EF20A04AFC0092C0F0 /* Assets.xcassets */; };
 		F286B8F320A04AFC0092C0F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F286B8F120A04AFC0092C0F0 /* LaunchScreen.storyboard */; };
 		F286B8F620A04AFC0092C0F0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8F520A04AFC0092C0F0 /* main.m */; };
 		F286B90020A04AFC0092C0F0 /* BrushDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B8FF20A04AFC0092C0F0 /* BrushDemoTests.m */; };
 		F286B90B20A04AFC0092C0F0 /* BrushDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B90A20A04AFC0092C0F0 /* BrushDemoUITests.m */; };
-		F286B91A20A04B0B0092C0F0 /* DrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B91920A04B0B0092C0F0 /* DrawView.m */; };
 		F286B92120A04E710092C0F0 /* shaderUtil.c in Sources */ = {isa = PBXBuildFile; fileRef = F286B91B20A04E700092C0F0 /* shaderUtil.c */; };
 		F286B92220A04E710092C0F0 /* fileUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = F286B91E20A04E700092C0F0 /* fileUtil.m */; };
 		F286B92320A04E710092C0F0 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = F286B91F20A04E710092C0F0 /* Particle.png */; };
@@ -50,12 +50,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A983CE4624EFA1B500213D35 /* DrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawView.h; sourceTree = "<group>"; };
+		A983CE4724EFA1B500213D35 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		A983CE4824EFA1B500213D35 /* DrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawView.m; sourceTree = "<group>"; };
+		A983CE4924EFA1B600213D35 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F253B1DB20AE6F0200AA0DC4 /* circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circle.png; sourceTree = "<group>"; };
 		F286B8E320A04AFA0092C0F0 /* BrushDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrushDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F286B8E620A04AFA0092C0F0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F286B8E720A04AFA0092C0F0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		F286B8E920A04AFA0092C0F0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		F286B8EA20A04AFA0092C0F0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F286B8ED20A04AFA0092C0F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F286B8EF20A04AFC0092C0F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F286B8F220A04AFC0092C0F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -67,8 +69,6 @@
 		F286B90620A04AFC0092C0F0 /* BrushDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrushDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F286B90A20A04AFC0092C0F0 /* BrushDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrushDemoUITests.m; sourceTree = "<group>"; };
 		F286B90C20A04AFC0092C0F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F286B91820A04B0B0092C0F0 /* DrawView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawView.h; sourceTree = "<group>"; };
-		F286B91920A04B0B0092C0F0 /* DrawView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawView.m; sourceTree = "<group>"; };
 		F286B91B20A04E700092C0F0 /* shaderUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = shaderUtil.c; sourceTree = "<group>"; };
 		F286B91C20A04E700092C0F0 /* shaderUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaderUtil.h; sourceTree = "<group>"; };
 		F286B91D20A04E700092C0F0 /* fileUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileUtil.h; sourceTree = "<group>"; };
@@ -143,10 +143,10 @@
 			children = (
 				F286B8E620A04AFA0092C0F0 /* AppDelegate.h */,
 				F286B8E720A04AFA0092C0F0 /* AppDelegate.m */,
-				F286B8E920A04AFA0092C0F0 /* ViewController.h */,
-				F286B8EA20A04AFA0092C0F0 /* ViewController.m */,
-				F286B91820A04B0B0092C0F0 /* DrawView.h */,
-				F286B91920A04B0B0092C0F0 /* DrawView.m */,
+				A983CE4724EFA1B500213D35 /* ViewController.h */,
+				A983CE4924EFA1B600213D35 /* ViewController.m */,
+				A983CE4624EFA1B500213D35 /* DrawView.h */,
+				A983CE4824EFA1B500213D35 /* DrawView.m */,
 				F286B92D20A175620092C0F0 /* UIImage+color.h */,
 				F286B92E20A175620092C0F0 /* UIImage+color.m */,
 				F286B91B20A04E700092C0F0 /* shaderUtil.c */,
@@ -349,13 +349,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F286B8EB20A04AFA0092C0F0 /* ViewController.m in Sources */,
 				F286B8F620A04AFC0092C0F0 /* main.m in Sources */,
 				F286B93D20A1813A0092C0F0 /* QuadCurveGeometry.m in Sources */,
 				F286B93C20A1813A0092C0F0 /* CuvbicCurveGeometry.m in Sources */,
 				F286B92120A04E710092C0F0 /* shaderUtil.c in Sources */,
+				A983CE4A24EFA1B600213D35 /* DrawView.m in Sources */,
 				F286B92220A04E710092C0F0 /* fileUtil.m in Sources */,
-				F286B91A20A04B0B0092C0F0 /* DrawView.m in Sources */,
+				A983CE4B24EFA1B600213D35 /* ViewController.m in Sources */,
 				F286B93B20A1813A0092C0F0 /* UIBezierPath+Geometry.m in Sources */,
 				F286B8E820A04AFA0092C0F0 /* AppDelegate.m in Sources */,
 				F286B93E20A1813A0092C0F0 /* LineGeometry.m in Sources */,

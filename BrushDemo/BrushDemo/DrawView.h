@@ -2,7 +2,7 @@
 //  DrawView.h
 //  BrushDemo
 //
-//  Created by ming on 2018/5/7.
+//  Created by ming on 2019/8/18.
 //  Copyright © 2018年 ming. All rights reserved.
 //
 

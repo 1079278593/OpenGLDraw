@@ -2,7 +2,7 @@
 //  DrawView.m
 //  BrushDemo
 //
-//  Created by ming on 2018/5/7.
+//  Created by ming on 2019/8/18.
 //  Copyright © 2018年 ming. All rights reserved.
 //
 
@@ -117,17 +117,6 @@ textureInfo_t textures[4] = {
     [super layoutSubviews];
     self.backgroundColor = [UIColor whiteColor];
     [self setUpViewport];
-    
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    [path moveToPoint:CGPointZero];
-    [path addLineToPoint:CGPointMake(30, 100)];
-    [path addLineToPoint:CGPointMake(40, 130)];
-    [path addLineToPoint:CGPointMake(50, 150)];
-    [path addLineToPoint:CGPointMake(20, 100)];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void){
-        [self renderLinePath:path];
-    });
 }
 
 #pragma mark - 初始化Context
@@ -144,10 +133,12 @@ textureInfo_t textures[4] = {
         return NO;
     }
     
-    // Set the view's scale factor as you wish
+    /**
+     //这个scale会影响backingWidth和backingHeight
+     在函数setUpViewport里，glGetRenderbufferParameteriv 获取的  backingWidth 会乘以这个 scale
+     */
     double scale = [[UIScreen mainScreen] scale];
-    scale = 1;
-    self.contentScaleFactor = scale;//这个scale会影响backingWidth和backingHeight
+    self.contentScaleFactor = scale;
     return YES;
 }
 

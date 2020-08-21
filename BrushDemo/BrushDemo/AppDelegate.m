@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  BrushDemo
 //
-//  Created by ming on 2018/5/7.
+//  Created by ming on 2019/8/10.
 //  Copyright © 2018年 ming. All rights reserved.
 //
 
