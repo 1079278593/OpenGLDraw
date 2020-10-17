@@ -38,7 +38,7 @@ enum {
 
 typedef struct {
     char *vert, *frag;
-    GLint uniform[NUM_UNIFORMS];
+    GLint uniform[NUM_UNIFORMS];//存储：统一变量location的数组
     GLuint id;
 } programInfo_t;
 
@@ -123,7 +123,7 @@ textureInfo_t textures[4] = {
 - (BOOL)initContext{
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
     eaglLayer.opaque = YES;
-    // In this application, we want to retain the EAGLDrawable contents after a call to presentRenderbuffer.
+    // 在这个应用程序中，我们希望在调用presentRenderbuffer之后保留EAGLDrawable内容。
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
                                     [NSNumber numberWithBool:YES], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
     
@@ -145,7 +145,7 @@ textureInfo_t textures[4] = {
 #pragma mark 初始化OpenGL
 - (BOOL)initGL
 {
-    // Generate IDs for a framebuffer object and a color renderbuffer
+    // 为framebuffer对象和颜色渲染缓冲区生成id
     glGenFramebuffers(1, &viewFramebuffer);
     glGenRenderbuffers(1, &viewRenderbuffer);
     
@@ -177,11 +177,11 @@ textureInfo_t textures[4] = {
     }
     
     
-    // Create a Vertex Buffer Object to hold our data
+    // 创建一个顶点缓冲对象来保存我们的数据
     glGenBuffers(1, &vboId);
     
     
-    // Enable blending and set a blending function appropriate for premultiplied alpha pixel data
+    // 启用混合和设置一个混合函数适当的预乘alpha像素数据
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     return YES;
@@ -216,7 +216,7 @@ textureInfo_t textures[4] = {
 
 #pragma mark 清除内容
 // Erases the screen
-- (void)erase{
+- (void)erase {
     [EAGLContext setCurrentContext:context];
     // Clear the buffer
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -243,10 +243,10 @@ textureInfo_t textures[4] = {
             "MVP", "pointSize", "vertexColor", "texture",
         };
         
-        // auto-assign known attribs
+        // 自动分配已知的自然属性
         for (int j = 0; j < NUM_ATTRIBS; j++)
         {
-            if (strstr(vsrc, attribName[j]))
+            if (strstr(vsrc, attribName[j])) //判断attribName是否在顶点着色器中出现的字符串
             {
                 attrib[attribCount] = j;//设置属性的location，根据j来。
                 attribUsed[attribCount++] = attribName[j];//attribCt传递自身值，结束后自增。
@@ -261,7 +261,7 @@ textureInfo_t textures[4] = {
         free(vsrc);
         free(fsrc);
         
-        // Set constant/initalize uniforms
+        // 设置常量、初始统一变量
         if (i == PROGRAM_POINT)
         {
             glUseProgram(program[PROGRAM_POINT].id);

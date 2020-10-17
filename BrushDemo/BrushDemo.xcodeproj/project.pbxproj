@@ -118,10 +118,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A949C2902539411A00CF09A5 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				F286B91F20A04E710092C0F0 /* Particle.png */,
+				F286B92B20A060480092C0F0 /* 1.png */,
+				F286B92920A05E750092C0F0 /* 2.png */,
+				F253B1DB20AE6F0200AA0DC4 /* circle.png */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		A949C2912539412700CF09A5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F286B92D20A175620092C0F0 /* UIImage+color.h */,
+				F286B92E20A175620092C0F0 /* UIImage+color.m */,
+				F286B91C20A04E700092C0F0 /* shaderUtil.h */,
+				F286B91B20A04E700092C0F0 /* shaderUtil.c */,
+				F286B92020A04E710092C0F0 /* debug.h */,
+				F286B91D20A04E700092C0F0 /* fileUtil.h */,
+				F286B91E20A04E700092C0F0 /* fileUtil.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		F286B8DA20A04AFA0092C0F0 = {
 			isa = PBXGroup;
 			children = (
 				F286B8E520A04AFA0092C0F0 /* BrushDemo */,
+				A949C2912539412700CF09A5 /* Utilities */,
+				A949C2902539411A00CF09A5 /* resources */,
+				F286B93020A1813A0092C0F0 /* UIBezierPath+Geometry */,
+				F286B92420A04F220092C0F0 /* Shaders */,
 				F286B8FE20A04AFC0092C0F0 /* BrushDemoTests */,
 				F286B90920A04AFC0092C0F0 /* BrushDemoUITests */,
 				F286B8E420A04AFA0092C0F0 /* Products */,
@@ -147,19 +176,6 @@
 				A983CE4924EFA1B600213D35 /* ViewController.m */,
 				A983CE4624EFA1B500213D35 /* DrawView.h */,
 				A983CE4824EFA1B500213D35 /* DrawView.m */,
-				F286B92D20A175620092C0F0 /* UIImage+color.h */,
-				F286B92E20A175620092C0F0 /* UIImage+color.m */,
-				F286B91B20A04E700092C0F0 /* shaderUtil.c */,
-				F286B91C20A04E700092C0F0 /* shaderUtil.h */,
-				F286B92020A04E710092C0F0 /* debug.h */,
-				F286B91D20A04E700092C0F0 /* fileUtil.h */,
-				F286B91E20A04E700092C0F0 /* fileUtil.m */,
-				F286B91F20A04E710092C0F0 /* Particle.png */,
-				F286B93020A1813A0092C0F0 /* UIBezierPath+Geometry */,
-				F286B92B20A060480092C0F0 /* 1.png */,
-				F286B92920A05E750092C0F0 /* 2.png */,
-				F253B1DB20AE6F0200AA0DC4 /* circle.png */,
-				F286B92420A04F220092C0F0 /* Shaders */,
 				F286B8EC20A04AFA0092C0F0 /* Main.storyboard */,
 				F286B8EF20A04AFC0092C0F0 /* Assets.xcassets */,
 				F286B8F120A04AFC0092C0F0 /* LaunchScreen.storyboard */,
@@ -530,7 +546,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AT942ZRU45;
+				DEVELOPMENT_TEAM = D67536M5X6;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				INFOPLIST_FILE = BrushDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -549,7 +565,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = AT942ZRU45;
+				DEVELOPMENT_TEAM = D67536M5X6;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				INFOPLIST_FILE = BrushDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
